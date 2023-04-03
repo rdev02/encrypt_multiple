@@ -38,7 +38,7 @@ def walkInfo(path: Path):
         print("single file: " + path.name)
         return
     
-    found = list(path.rglob('**/*.pdf'))
+    found = list(path.rglob('**/*.[pP][dD][fF]'))
     print(f"found {len(found)} files. examples: ")
     i = 0
     while i < len(found) and i < 3: 
@@ -54,7 +54,7 @@ def walkCrypt(path: Path, pwd: str, isEncrypt: bool):
         cryptFile(path, pwd, isEncrypt)
         return
     
-    for file in path.rglob('**/*.pdf'):
+    for file in path.rglob('**/*.[pP][dD][fF]'):
         cryptFile(file, pwd, isEncrypt)
 
 def cryptFile(fPath: Path, pwd: str, isEncrypt: bool):
