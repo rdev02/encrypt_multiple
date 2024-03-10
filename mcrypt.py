@@ -1,5 +1,4 @@
 import argparse
-import sys  
 from pathlib import Path
 from PyPDF2 import PdfReader, PdfWriter
 
@@ -10,11 +9,14 @@ def main(args):
         print(f"path {args.path} does not exist or can't be accessed: ")
         raise SystemExit
     
-    walkInfo(p)
-    userInput = input(("en" if args.encrypt else "de") + "crypt above files? [y/n]: ")
-    if userInput != 'y': 
-        print('okay then... bye!')
-        raise SystemExit
+    walkInfo(p, args.yestoall)
+    if(not args.yestoall):
+        userInput = input(("en" if args.encrypt else "de") + "crypt above files? [y/n]: ")
+        if userInput != 'y': 
+            print('okay then... bye!')
+            raise SystemExit
+    else:
+        print(("en" if args.encrypt else "de") + "crypt above files? [y/n]: y\n")
     
     pwd = args.pwd
     while len(pwd) <= 3:
@@ -23,16 +25,17 @@ def main(args):
             print('read less than 3, again:')
 
     print('and so it was ' + getStarredInput(pwd))
-    userInput = input("proceed? [y/n]: ")
-    if userInput != 'y': 
-        print('okay then... bye!')
-        raise SystemExit
+    if(not args.yestoall):
+        userInput = input("proceed? [y/n]: ")
+        if userInput != 'y': 
+            print('okay then... bye!')
+            raise SystemExit
     
     walkCrypt(p, pwd, args.encrypt)
     print("====")
     print("All done!")
 
-def walkInfo(path: Path):
+def walkInfo(path: Path, yestoall: bool):
     print("looking in " + path.absolute().__str__())
     if(path.is_file()):
         print("single file: " + path.name)
@@ -45,9 +48,12 @@ def walkInfo(path: Path):
         print(found[i].__str__().replace(path.absolute().__str__(), ""))
         i += 1
     if len(found) > 3:
-        seeMore = input("wanna see more? [y/n]:")
+        seeMore = 'y'
+        if(not yestoall):
+            seeMore = input("wanna see more? [y/n]:")
+
         if(seeMore == 'y'):
-            print(found)
+            print("\n".join(item.__str__().replace(path.absolute().__str__(), "") for item in found[3:]))
     
 def walkCrypt(path: Path, pwd: str, isEncrypt: bool):
     if(path.is_file()):
@@ -101,6 +107,7 @@ if __name__=="__main__":
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-e", "--encrypt", action="store_true", default=True)
     group.add_argument("-d", "--decrypt", action="store_true")
+    parser.add_argument("-y", "--yestoall", action="store_true", default=False)
     args = parser.parse_args()
     #print(args._get_kwargs())
     if args.decrypt:

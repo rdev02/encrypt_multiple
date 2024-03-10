@@ -7,8 +7,8 @@ pip install pypdf2 pycryptodome
 ```
 usage
 ```shell
-% python crypt.py -h                                              
-usage: crypt.py [-h] [-p PWD] [-e | -d] path
+% python mcrypt.py -h                                              
+usage: mcrypt.py [-h] [-p PWD] [-e | -d] path
 
 positional arguments:
   path               path to scan for pdfs
@@ -22,11 +22,11 @@ optional arguments:
 
 or simply
 ```
-python crypt.py -p my_pwd /path/to/folder_or_file
+python mcrypt.py -p my_pwd /path/to/folder_or_file
 ```
 to encrypt and 
 
 ```
-python crypt.py -d -p my_pwd /path/to/folder_or_file
+python mcrypt.py -d -p my_pwd /path/to/folder_or_file
 ```
 to decrypt
